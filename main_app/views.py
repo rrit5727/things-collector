@@ -5,3 +5,5 @@ dogs = [
   {'name': 'Woofles', 'breed': 'Cholotzinquitli', 'description': 'Charming', 'age': 2},
 ]
 
+def home(request):
+    return render(request, 'home.html')
