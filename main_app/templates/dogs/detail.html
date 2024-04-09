@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Cat Details</h1>
+<h1>Dog Details</h1>
 
 <div class="card">
   <div class="card-content">
@@ -13,6 +13,10 @@
     {% else %}
       <p>Age: puppy</p>
     {% endif %}
+  </div>
+  <div class="card-action">
+    <a href="{% url 'dogs_update' dog.id %}">Edit</a>
+    <a href="{% url 'dogs_delete' dog.id %}">Delete</a>
   </div>
 </div>
 
