@@ -11,7 +11,7 @@ MEALS = (
 class Dog(models.Model):
     name = models.CharField(max_length=20)
     breed = models.CharField(max_length=20)
-    description = models.TextField(max_length=20)
+    description = models.TextField(max_length=50)
     age = models.IntegerField()
 
     def __str__(self):
@@ -39,7 +39,7 @@ class Feeding(models.Model):
 
 class Park(models.Model):
     name = models.CharField(max_length=20)
-    description = models.CharField(max_length=20)
+    description = models.CharField(max_length=50)
     offleash = models.BooleanField(
         default=False,
     )
@@ -48,7 +48,6 @@ class Park(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('detail', kwargs={'park_id': self.id}
+        return reverse('parks_detail', kwargs={'pk': self.id}
         )
-    
     

@@ -12,5 +12,7 @@ urlpatterns = [
     path('dogs/<int:dog_id>/add_feeding/', views.add_feeding, name='add_feeding'),
     path('parks/', views.ParkList.as_view(), name='parks_list'),
     path('parks/<int:pk>/', views.ParkDetail.as_view(), name='parks_detail'),
-    path('parks/create/', views.ParkCreate.as_view(), name='parks_create')
+    path('parks/create/', views.ParkCreate.as_view(), name='parks_create'),
+    path('parks/<int:pk>/update/', views.ParkUpdate.as_view(), name='parks_update'),
+    path('parks/<int:pk>/delete/', views.ParkDelete.as_view(), name='parks_delete')
 ]

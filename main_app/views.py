@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
-
-
+from django.urls import reverse_lazy
+ 
 from .models import Dog, Park
 from .forms import FeedingForm
 
@@ -59,4 +59,12 @@ class ParkDetail(DetailView):
 class ParkCreate(CreateView):
     model = Park
     fields = '__all__'
-    # success_url = '/parks/{park_id}'
+    success_url = reverse_lazy('parks_list')
+
+class ParkUpdate(UpdateView):
+    model = Park
+    fields = '__all__'
+    
+class ParkDelete(DeleteView):
+    model = Park
+    success_url = '/parks/'

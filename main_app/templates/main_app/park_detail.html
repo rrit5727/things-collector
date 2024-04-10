@@ -12,8 +12,8 @@
                 <p>Offleash: {{ park.offleash }}</p>
             </div>
             <div>
-                <a href="">Edit</a>
-                <a href="">update</a>
+                <a href="{% url 'parks_update' object.pk %}">Edit</a>
+                <a href="{% url 'parks_delete' object.pk %}">Delete</a>
             </div>
         </div>
     </div>
