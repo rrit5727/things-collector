@@ -7,12 +7,27 @@ MEALS = (
     ( 'D', 'Dinner')
 )
 
+class Park(models.Model):
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=50)
+    offleash = models.BooleanField(
+        default=False,
+    )
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('parks_detail', kwargs={'pk': self.id}
+        )
+    
 # Create your models here.
 class Dog(models.Model):
     name = models.CharField(max_length=20)
     breed = models.CharField(max_length=20)
     description = models.TextField(max_length=50)
     age = models.IntegerField()
+    parks = models.ManyToManyField(Park)
 
     def __str__(self):
         return self.name
@@ -37,17 +52,4 @@ class Feeding(models.Model):
     class Meta:
         ordering = ['-date']
 
-class Park(models.Model):
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=50)
-    offleash = models.BooleanField(
-        default=False,
-    )
-
-    def __str__(self):
-        return self.name
-    
-    def get_absolute_url(self):
-        return reverse('parks_detail', kwargs={'pk': self.id}
-        )
     

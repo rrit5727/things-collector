@@ -24,14 +24,17 @@ def dogs_index(request):
 
 def dogs_detail(request, dog_id):
     dog = Dog.objects.get(id=dog_id)
+    id_list = dog.parks.all().values_list('id')
+    parks_dog_doesnt_goto = Park.objects.exclude(id__in=id_list)
     feeding_form = FeedingForm()
     return render(request, 'dogs/detail.html', 
-        {'dog': dog, 'feeding_form': feeding_form
+        {'dog': dog, 'feeding_form': feeding_form,
+         'parks': parks_dog_doesnt_goto
     })
 
 class DogCreate(CreateView):
     model = Dog
-    fields = '__all__'
+    fields = ['name', 'breed', 'description', 'age']
     success_url = '/dogs/{dog_id}'
 
 class DogUpdate(UpdateView):
@@ -68,3 +71,7 @@ class ParkUpdate(UpdateView):
 class ParkDelete(DeleteView):
     model = Park
     success_url = '/parks/'
+
+def assoc_park(request, dog_id, park_id):
+    Dog.objects.get(id=dog_id).parks.add(park_id)
+    return redirect('detail', dog_id=dog_id)
