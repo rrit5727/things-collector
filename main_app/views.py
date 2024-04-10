@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 
-from .models import Dog
+
+from .models import Dog, Park
 from .forms import FeedingForm
 
 # dogs = [
@@ -49,3 +50,13 @@ def add_feeding(request, dog_id):
         new_feeding.save()
     return redirect('detail', dog_id=dog_id)
 
+class ParkList(ListView):
+    model = Park
+
+class ParkDetail(DetailView):
+    model = Park
+
+class ParkCreate(CreateView):
+    model = Park
+    fields = '__all__'
+    # success_url = '/parks/{park_id}'

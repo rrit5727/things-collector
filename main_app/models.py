@@ -36,3 +36,19 @@ class Feeding(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+class Park(models.Model):
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=20)
+    offleash = models.BooleanField(
+        default=False,
+    )
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('detail', kwargs={'park_id': self.id}
+        )
+    
+    
