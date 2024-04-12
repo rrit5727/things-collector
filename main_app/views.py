@@ -3,6 +3,8 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Dog, Park
 from .forms import FeedingForm
@@ -18,12 +20,16 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
+@login_required
 def dogs_index(request):
-    dogs = Dog.objects.all()
+    dogs = Dog.objects.filter(user=request.user)
+    # Another query
+    # dogs = request.user.dog_set.all()
     return render(request, 'dogs/index.html', {
         'dogs': dogs
     })
 
+@login_required
 def dogs_detail(request, dog_id):
     dog = Dog.objects.get(id=dog_id)
     id_list = dog.parks.all().values_list('id')
@@ -34,7 +40,8 @@ def dogs_detail(request, dog_id):
          'parks': parks_dog_doesnt_goto
     })
 
-class DogCreate(CreateView):
+
+class DogCreate(LoginRequiredMixin, CreateView):
     model = Dog
     fields = ['name', 'breed', 'description', 'age']
     # success_url = '/dogs/{dog_id}'
@@ -46,14 +53,15 @@ class DogCreate(CreateView):
     
 
 
-class DogUpdate(UpdateView):
+class DogUpdate(LoginRequiredMixin, UpdateView):
     model = Dog
     fields = ['breed', 'description', 'age']
 
-class DogDelete(DeleteView):
+class DogDelete(LoginRequiredMixin, DeleteView):
     model = Dog
     success_url = '/dogs'
 
+@login_required 
 def add_feeding(request, dog_id):
     form = FeedingForm(request.POST)
     if form.is_valid():
@@ -62,29 +70,31 @@ def add_feeding(request, dog_id):
         new_feeding.save()
     return redirect('detail', dog_id=dog_id)
 
-class ParkList(ListView):
+class ParkList(LoginRequiredMixin, ListView):
     model = Park
 
-class ParkDetail(DetailView):
+class ParkDetail(LoginRequiredMixin, DetailView):
     model = Park
 
-class ParkCreate(CreateView):
+class ParkCreate(LoginRequiredMixin, CreateView):
     model = Park
     fields = '__all__'
     success_url = reverse_lazy('parks_list')
 
-class ParkUpdate(UpdateView):
+class ParkUpdate(LoginRequiredMixin, UpdateView):
     model = Park
     fields = '__all__'
     
-class ParkDelete(DeleteView):
+class ParkDelete(LoginRequiredMixin, DeleteView):
     model = Park
     success_url = '/parks/'
 
+@login_required
 def assoc_park(request, dog_id, park_id):
     Dog.objects.get(id=dog_id).parks.add(park_id)
     return redirect('detail', dog_id=dog_id)
 
+ 
 def signup(request): 
     error_message = ''
     if request.method == 'POST':
