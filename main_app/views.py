@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.urls import reverse_lazy
- 
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+
 from .models import Dog, Park
 from .forms import FeedingForm
 
@@ -35,7 +37,14 @@ def dogs_detail(request, dog_id):
 class DogCreate(CreateView):
     model = Dog
     fields = ['name', 'breed', 'description', 'age']
-    success_url = '/dogs/{dog_id}'
+    # success_url = '/dogs/{dog_id}'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        # let the CreateView's form_valid method do its work
+        return super().form_valid(form)
+    
+
 
 class DogUpdate(UpdateView):
     model = Dog
@@ -75,3 +84,21 @@ class ParkDelete(DeleteView):
 def assoc_park(request, dog_id, park_id):
     Dog.objects.get(id=dog_id).parks.add(park_id)
     return redirect('detail', dog_id=dog_id)
+
+def signup(request): 
+    error_message = ''
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # save the user to the db
+            user = form.save()
+            # automatically login the new user
+            login(request, user)
+            return redirect('index')
+        else: 
+            erorr_message = 'Invalid sign up - try again'
+    # A bad POST or GET request, so render signup template
+    form = UserCreationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'registration/signup.html', context)   
+

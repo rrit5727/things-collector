@@ -20,10 +20,16 @@
         </ul>
         <ul class="right">
           <li><a href="{% url 'about' %}">About</a></li>
-          <li><a href="{% url 'dogs_create' %}">Add a dog</a></li>
-          <li><a href="{% url 'index' %}">View all my dogs</a></li>
-          <li><a href="{% url 'parks_create' %}">Add park</a></li>
-          <li><a href="{% url 'parks_list' %}">View all parks</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'dogs_create' %}">Add a dog</a></li>
+            <li><a href="{% url 'index' %}">View all my dogs</a></li>
+            <li><a href="{% url 'parks_create' %}">Add park</a></li>
+            <li><a href="{% url 'parks_list' %}">View all parks</a></li>
+            <li><a href="{% url 'logout' %}">Log Out</a></li>            
+            {% else %}
+              <li><a href="{% url 'signup' %}">Sign Up</a></li>
+              <li><a href="{% url 'login' %}">Log In</a></li>
+          {% endif %}
 
         </ul>
       </div>
